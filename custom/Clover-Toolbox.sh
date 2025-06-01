@@ -1,24 +1,4 @@
 #!/bin/bash
-
-# check if Bazzite or SteamOS
-grep -i bazzite /etc/os-release &> /dev/null
-if [ $? -eq 0 ]
-then
-	OS=bazzite
-	EFI_PATH=/boot/efi/EFI
-	BOOTX64=$EFI_PATH/BOOT/BOOTX64.EFI
-else
-	grep -i SteamOS /etc/os-release &> /dev/null
-	if [ $? -eq 0 ]
-	then
-		OS=SteamOS
-		EFI_PATH=/esp/efi
-		BOOTX64=$EFI_PATH/boot/bootx64.efi
-	else
-		exit
-	fi
-fi
-
 current_password=$(zenity --password --title "sudo Password Authentication")
 echo -e "$current_password\n" | sudo -S ls &> /dev/null
 if [ $? -ne 0 ]
@@ -42,7 +22,7 @@ Choice=$(zenity --width 750 --height 450 --list --radiolist --multiple 	--title 
 	FALSE Boot "Set the OS that will be booted by default."\
 	FALSE NewLogo "Replace the BGRT startup logo."\
 	False OldLogo "Restore the BGRT startup logo to the default."\
-	FALSE Resolution "Set the screen resolution if using the DeckHD or DeckSight screen mod."\
+	FALSE Resolution "Set the screen resolution if using the DeckHD 1200p screen mod."\
 	FALSE Custom "Replace Clover EFI with a custom one that hides the OPTIONS button."\
 	FALSE Uninstall "Choose this to uninstall Clover and revert any changes made."\
 	TRUE EXIT "***** Exit the Clover Toolbox *****")
@@ -71,14 +51,14 @@ Batocera_Choice=$(zenity --width 550 --height 220 --list --radiolist --multiple 
 	elif [ "$Batocera_Choice" == "v39" ]
 	then
 		# Update the config.plist for Batocera v39 and newer
-		echo -e "$current_password\n" | sudo -S sed -i '/<string>os_batocera<\/string>/!b;n;n;c\\t\t\t\t\t<string>\\efi\\batocera\\grubx64\.efi<\/string>' $EFI_PATH/clover/config.plist
+		echo -e "$current_password\n" | sudo -S sed -i '/<string>os_batocera<\/string>/!b;n;n;c\\t\t\t\t\t<string>\\EFI\\batocera\\grubx64\.efi<\/string>' /boot/efi/efi/clover/config.plist
 
 		zenity --warning --title "Clover Toolbox" --text "Clover config has been updated for Batocera v39 and newer!" --width 450 --height 75
 
 	elif [ "$Batocera_Choice" == "v38" ]
 	then
 		# Update the config.plist for Batocera v38 and older
-		echo -e "$current_password\n" | sudo -S sed -i '/<string>os_batocera<\/string>/!b;n;n;c\\t\t\t\t\t<string>\\efi\\boot\\bootx64\.efi<\/string>' $EFI_PATH/clover/config.plist
+		echo -e "$current_password\n" | sudo -S sed -i '/<string>os_batocera<\/string>/!b;n;n;c\\t\t\t\t\t<string>\\EFI\\BOOT\\BOOTX64\.efi<\/string>' /boot/efi/efi/clover/config.plist
 
 		zenity --warning --title "Clover Toolbox" --text "Clover config has been updated for Batocera v38 and older!" --width 450 --height 75
 
@@ -87,13 +67,13 @@ Batocera_Choice=$(zenity --width 550 --height 220 --list --radiolist --multiple 
 elif [ "$Choice" == "Themes" ]
 then
 Theme_Choice=$(zenity --title "Clover Toolbox"	--width 200 --height 325 --list \
-	--column "Theme Name" $(echo -e "$current_password\n" | sudo -S ls $EFI_PATH/clover/themes) )
+	--column "Theme Name" $(echo -e "$current_password\n" | sudo -S ls /boot/efi/efi/clover/themes) )
 
 	if [ $? -eq 1 ]
 	then
 		echo User pressed CANCEL. Going back to main menu.
 	else
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>Theme<\/key>/!b;n;c\\t\t<string>'$Theme_Choice'<\/string>' $EFI_PATH/clover/config.plist
+		echo -e "$current_password\n" | sudo -S sed -i '/<key>Theme<\/key>/!b;n;c\\t\t<string>'$Theme_Choice'<\/string>' /boot/efi/efi/clover/config.plist
 		zenity --warning --title "Clover Toolbox" --text "Theme has been changed to $Theme_Choice!" --width 400 --height 75
 	fi
 
@@ -112,7 +92,7 @@ Timeout_Choice=$(zenity --width 500 --height 300 --list --radiolist --multiple 	
 		echo User pressed CANCEL. Going back to main menu.
 	else
 		# change the Default Timeout in config.plist 
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>Timeout<\/key>/!b;n;c\\t\t<integer>'$Timeout_Choice'<\/integer>' $EFI_PATH/clover/config.plist
+		echo -e "$current_password\n" | sudo -S sed -i '/<key>Timeout<\/key>/!b;n;c\\t\t<integer>'$Timeout_Choice'<\/integer>' /boot/efi/efi/clover/config.plist
 		zenity --warning --title "Clover Toolbox" --text "Default timeout is now set to $Timeout_Choice !" --width 400 --height 75
 	fi
 
@@ -131,7 +111,7 @@ Service_Choice=$(zenity --width 650 --height 250 --list --radiolist --multiple -
 	elif [ "$Service_Choice" == "Disable" ]
 	then
 		# restore Windows EFI entry from backup
-		echo -e "$current_password\n" | sudo -S cp $EFI_PATH/Microsoft/Boot/bootmgfw.efi.orig $EFI_PATH/Microsoft/Boot/bootmgfw.efi
+		echo -e "$current_password\n" | sudo -S cp /boot/efi/efi/Microsoft/Boot/bootmgfw.efi.orig /boot/efi/efi/Microsoft/Boot/bootmgfw.efi
 
 		# make Windows the next boot option!
 		Windows=$(efibootmgr | grep -i Windows | colrm 9 | colrm 1 4)
@@ -151,11 +131,10 @@ Service_Choice=$(zenity --width 650 --height 250 --list --radiolist --multiple -
 
 elif [ "$Choice" == "Boot" ]
 then
-Boot_Choice=$(zenity --width 550 --height 300 --list --radiolist --multiple --title "Clover Toolbox" --column "Select One" \
+Boot_Choice=$(zenity --width 550 --height 250 --list --radiolist --multiple --title "Clover Toolbox" --column "Select One" \
 	--column "Option" --column="Description - Read this carefully!"\
 	FALSE Windows "Set Windows as the default OS to boot."\
 	FALSE SteamOS "Set SteamOS as the default OS to boot."\
-	FALSE Bazzite "Set Bazzite as the default OS to boot."\
 	FALSE LastOS "The last OS that was booted will be the default."\
 	TRUE EXIT "***** Exit the Clover Toolbox *****")
 
@@ -165,31 +144,24 @@ Boot_Choice=$(zenity --width 550 --height 300 --list --radiolist --multiple --ti
 
 	elif [ "$Boot_Choice" == "Windows" ]
 	then
-		# change the Default Loader to Windows in config.plist 
+		# change the Default Loader to Windows in config,plist 
 
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultLoader<\/key>/!b;n;c\\t\t<string>\\efi\\microsoft\\bootmgfw\.efi<\/string>' $EFI_PATH/clover/config.plist
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultVolume<\/key>/!b;n;c\\t\t<string>esp<\/string>' $EFI_PATH/clover/config.plist
+		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultLoader<\/key>/!b;n;c\\t\t<string>\\EFI\\MICROSOFT\\bootmgfw\.efi<\/string>' /boot/efi/efi/clover/config.plist
+		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultVolume<\/key>/!b;n;c\\t\t<string>esp<\/string>' /boot/efi/efi/clover/config.plist
 
 		zenity --warning --title "Clover Toolbox" --text "Windows is now the default boot entry in Clover!" --width 400 --height 75
 
 	elif [ "$Boot_Choice" == "SteamOS" ]
 	then
-		# change the Default Loader in config.plist 
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultLoader<\/key>/!b;n;c\\t\t<string>\\efi\\steamos\\steamcl\.efi<\/string>' $EFI_PATH/clover/config.plist
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultVolume<\/key>/!b;n;c\\t\t<string>esp<\/string>' $EFI_PATH/clover/config.plist
-		zenity --warning --title "Clover Toolbox" --text "SteamOS is now the default boot entry in Clover!" --width 400 --height 75
-
-	elif [ "$Boot_Choice" == "Bazzite" ]
-	then
-		# change the Default Loader in config.plist 
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultLoader<\/key>/!b;n;c\\t\t<string>\\EFI\\FEDORA\\shimx64\.efi<\/string>' $EFI_PATH/clover/config.plist
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultVolume<\/key>/!b;n;c\\t\t<string>esp<\/string>' $EFI_PATH/clover/config.plist
+		# change the Default Loader in config,plist 
+		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultLoader<\/key>/!b;n;c\\t\t<string>\\EFI\\STEAMOS\\STEAMCL\.efi<\/string>' /boot/efi/efi/clover/config.plist
+		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultVolume<\/key>/!b;n;c\\t\t<string>esp<\/string>' /boot/efi/efi/clover/config.plist
 		zenity --warning --title "Clover Toolbox" --text "SteamOS is now the default boot entry in Clover!" --width 400 --height 75
 
 	elif [ "$Boot_Choice" == "LastOS" ]
 	then
-		# change the Default Volume in config.plist 
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultVolume<\/key>/!b;n;c\\t\t<string>LastBootedVolume<\/string>' $EFI_PATH/clover/config.plist
+		# change the Default Volume in config,plist 
+		echo -e "$current_password\n" | sudo -S sed -i '/<key>DefaultVolume<\/key>/!b;n;c\\t\t<string>LastBootedVolume<\/string>' /boot/efi/efi/clover/config.plist
 		zenity --warning --title "Clover Toolbox" --text "The last OS used is now the default boot entry in Clover!" --width 425 --height 75
 	fi
 
@@ -201,67 +173,54 @@ Logo_Choice=$(zenity --title "Clover Toolbox"	--width 200 --height 350 --list \
 	then
 		echo User pressed CANCEL. Going back to main menu.
 	else
-		echo -e "$current_password\n" | sudo -S cp ~/1Clover-tools/logos/$Logo_Choice $EFI_PATH/steamos/steamos.png
+		echo -e "$current_password\n" | sudo -S cp ~/1Clover-tools/logos/$Logo_Choice /boot/efi/efi/steamos/steamos.png
 		zenity --warning --title "Clover Toolbox" --text "BGRT logo has been changed to $Logo_Choice!" --width 400 --height 75
 	fi
 
 elif [ "$Choice" == "OldLogo" ]
 then
-	echo -e "$current_password\n" | sudo -S rm $EFI_PATH/steamos/steamos.png &> /dev/null
+	echo -e "$current_password\n" | sudo -S rm /boot/efi/efi/steamos/steamos.png &> /dev/null
 	zenity --warning --title "Clover Toolbox" --text "BGRT logo has been restored to the default!" --width 400 --height 75
 
 elif [ "$Choice" == "Resolution" ]
 then
 Resolution_Choice=$(zenity --width 550 --height 250 --list --radiolist --multiple --title "Clover Toolbox"\
 	--column "Select One" --column "Option" --column="Description - Read this carefully!"\
-	FALSE STOCK "Use the default screen resolution 1280x800."\
-	FALSE DeckHD "Use DeckHD screen resolution 1920x1200."\
-	FALSE DeckSight "Use DeckSight screen resolution 1920x1080."\
- 	TRUE EXIT "***** Exit the Clover Toolbox *****")
+	FALSE 800p "Use the default screen resolution 1280x800."\
+	FALSE 1200p "Use DeckHD screen resolution 1920x1200."\
+	TRUE EXIT "***** Exit the Clover Toolbox *****")
 
 	if [ $? -eq 1 ] || [ "$Resolution_Choice" == "EXIT" ]
 	then
 		echo User pressed CANCEL. Going back to main menu.
 
-	elif [ "$Resolution_Choice" == "STOCK" ]
+	elif [ "$Resolution_Choice" == "800p" ]
 	then
 		# change the sceen resolution to 1280x800 in config,plist 
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>ScreenResolution<\/key>/!b;n;c\\t\t<string>1280x800<\/string>' $EFI_PATH/clover/config.plist
+		echo -e "$current_password\n" | sudo -S sed -i '/<key>ScreenResolution<\/key>/!b;n;c\\t\t<string>1280x800<\/string>' /boot/efi/efi/clover/config.plist
 		zenity --warning --title "Clover Toolbox" --text "Screen resolution is now set to 1280x800." --width 400 --height 75
 
-	elif [ "$Resolution_Choice" == "DeckHD" ]
+	elif [ "$Resolution_Choice" == "1200p" ]
 	then
 		# change the sceen resolution to 1920x1200 in config,plist 
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>ScreenResolution<\/key>/!b;n;c\\t\t<string>1920x1200<\/string>' $EFI_PATH/clover/config.plist
+		echo -e "$current_password\n" | sudo -S sed -i '/<key>ScreenResolution<\/key>/!b;n;c\\t\t<string>1920x1200<\/string>' /boot/efi/efi/clover/config.plist
 		zenity --warning --title "Clover Toolbox" --text "Screen resolution is now set to 1920x1200." --width 400 --height 75
-
-	elif [ "$Resolution_Choice" == "DeckSight" ]
-	then
-		# change the sceen resolution to 1920x1080 in config,plist 
-		echo -e "$current_password\n" | sudo -S sed -i '/<key>ScreenResolution<\/key>/!b;n;c\\t\t<string>1920x1080<\/string>' $EFI_PATH/clover/config.plist
-		zenity --warning --title "Clover Toolbox" --text "Screen resolution is now set to 1920x1080." --width 400 --height 75
-
- 	fi
+	fi
 
 elif [ "$Choice" == "Custom" ]
 then
-	echo -e "$current_password\n" | sudo -S cp ~/1Clover-tools/efi/custom_clover_5157.efi $EFI_PATH/clover/cloverx64.efi
+	echo -e "$current_password\n" | sudo -S cp ~/1Clover-tools/efi/custom_clover_5157.efi /boot/efi/efi/clover/cloverx64.efi
 	zenity --warning --title "Clover Toolbox" --text "Custom Clover EFI has been installed!" --width 400 --height 75
 
 elif [ "$Choice" == "Uninstall" ]
 then
 	# restore Windows EFI entry from backup
-	echo -e "$current_password\n" | sudo -S mv $EFI_PATH/Microsoft/Boot/bootmgfw.efi.orig $EFI_PATH/Microsoft/Boot/bootmgfw.efi
-	if [ $? -eq 0 ]
-	then
-		echo -e "$current_password\n" | sudo -S rm $EFI_PATH/Microsoft/bootmgfw.efi
-	else
-		echo -e "$current_password\n" | sudo -S mv $EFI_PATH/Microsoft/bootmgfw.efi $EFI_PATH/Microsoft/Boot/bootmgfw.efi
-	fi
-	echo -e "$current_password\n" | sudo -S mv $BOOTX64.orig $BOOTX64
+	echo -e "$current_password\n" | sudo -S mv /boot/efi/efi/Microsoft/Boot/bootmgfw.efi.orig /boot/efi/efi/Microsoft/Boot/bootmgfw.efi
+	echo -e "$current_password\n" | sudo -S mv /boot/efi/efi/boot/bootx64.efi.orig /boot/efi/efi/boot/bootx64.efi
+	echo -e "$current_password\n" | sudo -S rm /boot/efi/efi/Microsoft/bootmgfw.efi
 
 	# remove Clover from the EFI system partition
-	echo -e "$current_password\n" | sudo -S rm -rf $EFI_PATH/clover
+	echo -e "$current_password\n" | sudo -S rm -rf /boot/efi/efi/clover
 
 	for entry in $(efibootmgr | grep "Clover - GUI" | colrm 9 | colrm 1 4)
 	do
@@ -269,17 +228,13 @@ then
 	done
 
 	# remove custom logo / BGRT
-	echo -e "$current_password\n" | sudo -S rm $EFI_PATH/steamos/steamos.png &> /dev/null
-
-	echo -e "$current_password\n" | sudo -S steamos-readonly disable
+	echo -e "$current_password\n" | sudo -S rm /boot/efi/efi/steamos/steamos.png &> /dev/null
 
 	# delete systemd service
+	echo -e "$current_password\n" | sudo -S steamos-readonly disable
 	echo -e "$current_password\n" | sudo -S systemctl stop clover-bootmanager.service
 	echo -e "$current_password\n" | sudo -S rm /etc/systemd/system/clover-bootmanager*
 	echo -e "$current_password\n" | sudo -S sudo systemctl daemon-reload
-
-	echo -e "$current_password\n" | sudo -S rm -f /etc/atomic-update.conf.d/clover-whitelist.conf
-
 	echo -e "$current_password\n" | sudo -S steamos-readonly enable
 
 	# delete dolphin root extension

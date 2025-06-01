@@ -51,37 +51,9 @@
 			<array>
 				<dict>
 					<key>Image</key>
-					<string>os_bazzite</string>
-					<key>Path</key>
-					<string>\efi\fedora\shimx64.efi</string>
-					<key>Title</key>
-					<string>Bazzite</string>
-					<key>Type</key>
-					<string>Linux</string>
-					<key>FullTitle</key>
-					<string>Bazzite - Powered by ublue Fedora Kinoite</string>
-					<key>VolumeType</key>
-					<string>Internal</string>
-				</dict>
-				<dict>
-					<key>Image</key>
-					<string>os_bazzite</string>
-					<key>Path</key>
-					<string>\efi\fedora\shimx64.efi</string>
-					<key>Title</key>
-					<string>Bazzite</string>
-					<key>Type</key>
-					<string>Linux</string>
-					<key>FullTitle</key>
-					<string>Bazzite on External SSD - Powered by ublue Fedora Kinoite</string>
-					<key>VolumeType</key>
-					<string>External</string>
-				</dict>
-				<dict>
-					<key>Image</key>
 					<string>os_steamos</string>
 					<key>Path</key>
-					<string>\efi\steamos\steamcl.efi</string>
+					<string>\EFI\STEAMOS\STEAMCL.efi</string>
 					<key>Title</key>
 					<string>SteamOS</string>
 					<key>Type</key>
@@ -95,7 +67,7 @@
 					<key>Image</key>
 					<string>os_steamos</string>
 					<key>Path</key>
-					<string>\efi\steamos\steamcl.efi</string>
+					<string>\EFI\STEAMOS\STEAMCL.efi</string>
 					<key>Title</key>
 					<string>SteamOS</string>
 					<key>Type</key>
@@ -109,13 +81,13 @@
 					<key>Image</key>
 					<string>os_win</string>
 					<key>Path</key>
-					<string>\efi\microsoft\bootmgfw.efi</string>
+					<string>\EFI\MICROSOFT\boot\bootmgfw.efi</string>
 					<key>Title</key>
 					<string>Windows</string>
 					<key>Type</key>
 					<string>Windows</string>
 					<key>FullTitle</key>
-					<string>Windows - Internal SSD</string>
+					<string>Windows Internal SSD</string>
 					<key>VolumeType</key>
 					<string>Internal</string>
 				</dict>
@@ -123,7 +95,7 @@
 					<key>Image</key>
 					<string>os_win</string>
 					<key>Path</key>
-					<string>\efi\microsoft\boot\bootmgfw.efi</string>
+					<string>\EFI\MICROSOFT\boot\bootmgfw.efi</string>
 					<key>Title</key>
 					<string>Windows</string>
 					<key>Type</key>
@@ -137,7 +109,7 @@
 					<key>Image</key>
 					<string>os_batocera</string>
 					<key>Path</key>
-					<string>\efi\batocera\grubX64.efi</string>
+					<string>\EFI\batocera\grubX64.efi</string>
 					<key>Title</key>
 					<string>Batocera</string>
 					<key>Type</key>
@@ -151,7 +123,7 @@
 					<key>Image</key>
 					<string>os_recovery</string>
 					<key>Path</key>
-					<string>\efi\boot\bootx64.efi</string>
+					<string>\EFI\BOOT\BOOTX64.efi</string>
 					<key>Title</key>
 					<string>Ventoy</string>
 					<key>Type</key>
@@ -160,12 +132,24 @@
 					<string>VTOYEFI</string>
 					<key>FullTitle</key>
 					<string>Ventoy MultiBoot USB</string>
+				</dict>				
+				<dict>
+					<key>Image</key>
+					<string>os_fedora</string>
+					<key>Path</key>
+					<string>\EFI\fedora\shimx64.efi</string>
+					<key>Title</key>
+					<string>Fedora</string>
+					<key>Type</key>
+					<string>Linux</string>
+					<key>FullTitle</key>
+					<string>Fedora / Nobara / Bazzite</string>
 				</dict>
 				<dict>
 					<key>Image</key>
 					<string>os_kali</string>
 					<key>Path</key>
-					<string>\efi\kali\grubx64.efi</string>
+					<string>\EFI\kali\grubx64.efi</string>
 					<key>Title</key>
 					<string>Kali</string>
 					<key>Type</key>
@@ -177,7 +161,7 @@
 					<key>Image</key>
 					<string>os_ubuntu</string>
 					<key>Path</key>
-					<string>\efi\ubuntu\shimx64.efi</string>
+					<string>\EFI\ubuntu\shimx64.efi</string>
 					<key>Title</key>
 					<string>Ubuntu</string>
 					<key>Type</key>
@@ -189,7 +173,7 @@
 					<key>Image</key>
 					<string>os_centos</string>
 					<key>Path</key>
-					<string>\efi\centos\shimx64.efi</string>
+					<string>\EFI\centos\shimx64.efi</string>
 					<key>Title</key>
 					<string>CentOS / RHEL</string>
 					<key>Type</key>
@@ -201,7 +185,7 @@
 					<key>Image</key>
 					<string>os_debian</string>
 					<key>Path</key>
-					<string>\efi\debian\grubx64.efi</string>
+					<string>\EFI\debian\grubx64.efi</string>
 					<key>Title</key>
 					<string>Debian</string>
 					<key>Type</key>
@@ -213,7 +197,7 @@
 					<key>Image</key>
 					<string>os_manjaro</string>
 					<key>Path</key>
-					<string>\efi\manjaro\grubx64.efi</string>
+					<string>\EFI\manjaro\grubx64.efi</string>
 					<key>Title</key>
 					<string>Manjaro</string>
 					<key>Type</key>
@@ -225,7 +209,7 @@
 					<key>Image</key>
 					<string>os_endeavouros</string>
 					<key>Path</key>
-					<string>\efi\endeavouros\grubx64.efi</string>
+					<string>\EFI\endeavouros\grubx64.efi</string>
 					<key>Title</key>
 					<string>EndeavourOS</string>
 					<key>Type</key>
@@ -237,7 +221,7 @@
 					<key>Image</key>
 					<string>os_ubuntu</string>
 					<key>Path</key>
-					<string>\efi\systemd\systemd-bootx64.efi</string>
+					<string>\EFI\systemd\systemd-bootx64.efi</string>
 					<key>Title</key>
 					<string>Pop!_ OS</string>
 					<key>Type</key>
@@ -256,7 +240,7 @@
 			<key>DoubleClickTime?</key>
 			<integer>500</integer>
 			<key>Enabled</key>
-			<false/>
+			<true/>
 			<key>Mirror?</key>
 			<false/>
 			<key>Speed</key>
@@ -269,11 +253,11 @@
 		<key>Scan</key>
 		<false/>
 		<key>ScreenResolution</key>
-		<string>1280x800</string>
+		<string>3840x2400</string>
 		<key>Timezone</key>
 		<integer>3</integer>
 		<key>Theme</key>
-		<string>Apocalypse</string>
+		<string>Catalina</string>
 	</dict>
 </dict>
 </plist>
