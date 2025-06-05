@@ -11,9 +11,9 @@
 		<key>Debug</key>
 		<false/>
 		<key>DefaultLoader</key>
-		<string>\EFI\STEAMOS\STEAMCL.efi</string>
+		<string>\EFI\MICROSOFT\bootmgfw.efi</string>
 		<key>DefaultVolume</key>
-		<string>esp</string>
+		<string>LastBootedVolume</string>
 		<key>DisableCloverHotkeys</key>
 		<false/>
 		<key>Fast</key>
@@ -81,7 +81,7 @@
 					<key>Image</key>
 					<string>os_win</string>
 					<key>Path</key>
-					<string>\EFI\MICROSOFT\boot\bootmgfw.efi</string>
+					<string>\EFI\MICROSOFT\bootmgfw.efi</string>
 					<key>Title</key>
 					<string>Windows</string>
 					<key>Type</key>
@@ -95,7 +95,7 @@
 					<key>Image</key>
 					<string>os_win</string>
 					<key>Path</key>
-					<string>\EFI\MICROSOFT\boot\bootmgfw.efi</string>
+					<string>\EFI\MICROSOFT\bootmgfw.efi</string>
 					<key>Title</key>
 					<string>Windows</string>
 					<key>Type</key>
